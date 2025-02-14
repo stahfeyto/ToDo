@@ -15,7 +15,7 @@ const App: React.FC = () => {
   
   // Obtém a função dispatch do Redux Toolkit
   const dispatch = useAppDispatch();
-
+  
   // Função para fechar o modal de criação de tarefas
   const closeModalCreateTask = () => {
     dispatch(modalActions.closeModalCreateTask());
