@@ -8,6 +8,7 @@ import SearchResults from "../Routes/SearchResults";
 import TaskOnly from "../Routes/TaskOnly";
 import TodaysTasks from "../Routes/TodaysTasks";
 import HeaderTasks from "./HeaderTasks";
+import TaskPieChart from "../TaskPieChart";
 
 const TasksSection: React.FC = () => {
   return (
@@ -29,6 +30,7 @@ const TasksSection: React.FC = () => {
         <Route path="/dir/:dir" element={<Directory />} />
         <Route path="/task/:taskId" element={<TaskOnly />} />
         <Route path="*" element={<Navigate to="" />} />
+        <Route path="/Statistics" element={<TaskPieChart />} />
       </Routes>
     </main>
   );

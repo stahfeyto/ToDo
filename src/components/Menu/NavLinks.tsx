@@ -23,6 +23,10 @@ const links = [
     name: "Uncompleted tasks",  // Nome do link
     path: "/uncompleted",  // Caminho para a página "Uncompleted tasks"
   },
+  {
+    name: "Statistics",  // Nome do link
+    path: "/Statistics",  // Caminho para a página "Uncompleted tasks"
+  },
 ];
 
 const NavLinks: React.FC<{ classActive: string }> = ({ classActive }) => {

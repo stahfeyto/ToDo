@@ -9,6 +9,16 @@ import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { modalActions } from "./store/Modal.store";
 import { tasksActions } from "./store/Tasks.store";
 
+
+const links = [
+  { name: "Today's tasks", path: "/today" },
+  { name: "All tasks", path: "/" },
+  { name: "Important tasks", path: "/important" },
+  { name: "Completed tasks", path: "/completed" },
+  { name: "Uncompleted tasks", path: "/uncompleted" },
+  { name: "Statistics", path: "/statistics" }, // Link para estatísticas
+];
+
 const App: React.FC = () => {
   // Seleciona o estado do modal usando Redux
   const modal = useAppSelector((state) => state.modal);
