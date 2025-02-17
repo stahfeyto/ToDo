@@ -1,47 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as BarTooltip, Legend as BarLegend, ResponsiveContainer as BarContainer } from "recharts";
 import { AreaChart, Area, XAxis as AreaXAxis, YAxis as AreaYAxis, CartesianGrid as AreaGrid, Tooltip as AreaTooltip, ResponsiveContainer as AreaContainer, LabelList } from "recharts";
-
-// Dados para o Gráfico Circular (Tarefas)
-const taskData = [
-  { name: "Completed", value: 6, color: "#f4faff" },
-  { name: "Uncompleted", value: 4, color: "#8884d8" },
-];
-
-// Dados para o Gráfico de Barras (Visitantes)
-const visitorData = [
-  { shortName: "All", fullName: "All Tasks", value: 7 },
-  { shortName: "Today", fullName: "Today's Tasks", value: 3 },
-  { shortName: "Comp", fullName: "Completed Tasks", value: 5 },
-  { shortName: "Uncom", fullName: "Uncompleted Tasks", value: 2 },
-  { shortName: "Impor", fullName: "Important Tasks", value: 4 },
-];
-
-// Dados para o Gráfico de Área
-const areaData = [
-  { name: "Monday", im: 4, co: 2 },
-  { name: "Tuesday", im: 5, co: 3 },
-  { name: "Wednesday", im: 2, co: 7 },
-  { name: "Thursday", im: 4, co: 3 },
-  { name: "Friday", im: 2, co: 4 },
-  { name: "Saturday", im: 1, co: 3 },
-  { name: "Sunday", im: 4, co: 6 },
-];
-
-// Componente de Tooltip personalizada para o Gráfico de Barras
-const CustomTooltip = ({ active, payload }: any) => {
-  if (active && payload && payload.length) {
-    const data = payload[0].payload;
-    return (
-      <div className="bg-gray-900 text-white p-2 rounded">
-        <p>{data.fullName}</p>
-        <p>Value: {data.value}</p>
-      </div>
-    );
-  }
-  return null;
-};
+import { Task } from "../interfaces";
 
 // Componente de Tooltip personalizada para o Gráfico Circular
 const CustomPieTooltip = ({ active, payload }: any) => {
@@ -50,6 +11,20 @@ const CustomPieTooltip = ({ active, payload }: any) => {
     return (
       <div className="bg-gray-900 text-white p-2 rounded">
         <p>{data.name}</p>
+        <p>Value: {data.value}</p>
+      </div>
+    );
+  }
+  return null;
+};
+
+// Componente de Tooltip personalizada para o Gráfico de Barras
+const CustomTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div className="bg-gray-900 text-white p-2 rounded">
+        <p>{data.fullName}</p>
         <p>Value: {data.value}</p>
       </div>
     );
@@ -73,6 +48,60 @@ const CustomAreaTooltip = ({ active, payload }: any) => {
 };
 
 const DashboardCharts: React.FC = () => {
+  const [taskData, setTaskData] = useState([
+    { name: "Completed", value: 0, color: "#f4faff" },
+    { name: "Uncompleted", value: 0, color: "#8884d8" },
+  ]);
+  const [visitorData, setVisitorData] = useState([
+    { shortName: "All", fullName: "All Tasks", value: 0 },
+    { shortName: "Today", fullName: "Today's Tasks", value: 0 },
+    { shortName: "Comp", fullName: "Completed Tasks", value: 0 },
+    { shortName: "Uncom", fullName: "Uncompleted Tasks", value: 0 },
+    { shortName: "Impor", fullName: "Important Tasks", value: 0 },
+  ]);
+  const [areaData, setAreaData] = useState([
+    { name: "Monday", im: 0, co: 0 },
+    { name: "Tuesday", im: 0, co: 0 },
+    { name: "Wednesday", im: 0, co: 0 },
+    { name: "Thursday", im: 0, co: 0 },
+    { name: "Friday", im: 0, co: 0 },
+    { name: "Saturday", im: 0, co: 0 },
+    { name: "Sunday", im: 0, co: 0 },
+  ]);
+
+  useEffect(() => {
+    const tasks = JSON.parse(localStorage.getItem("tasks") ?? "[]") as Task[];
+    if (tasks.length) {
+      const completed = tasks.filter(task => task.completed).length;
+      const uncompleted = tasks.filter(task => !task.completed).length;
+      const important = tasks.filter(task => task.important).length;
+
+      // Atualizando os dados para o gráfico circular
+      setTaskData([
+        { name: "Completed", value: completed, color: "#f4faff" },
+        { name: "Uncompleted", value: uncompleted, color: "#8884d8" },
+      ]);
+
+      // Atualizando os dados para o gráfico de barras
+      setVisitorData([
+        { shortName: "All", fullName: "All Tasks", value: tasks.length },
+        { shortName: "Today", fullName: "Today's Tasks", value: tasks.filter(task => task.date === new Date().toLocaleDateString()).length },
+        { shortName: "Comp", fullName: "Completed Tasks", value: completed },
+        { shortName: "Uncom", fullName: "Uncompleted Tasks", value: uncompleted },
+        { shortName: "Impor", fullName: "Important Tasks", value: important },
+      ]);
+
+      // Atualizando os dados para o gráfico de área
+      const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+      const newAreaData = daysOfWeek.map(day => ({
+        name: day,
+        im: tasks.filter(task => task.important && task.date.includes(day)).length,
+        co: tasks.filter(task => task.completed && task.date.includes(day)).length,
+      }));
+      setAreaData(newAreaData);
+    }
+  }, []);
+
   return (
     <div className="flex flex-col gap-6 items-center justify-center mt-12">
       {/* Linha superior: Gráfico Circular e Gráfico de Barras */}

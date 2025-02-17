@@ -5,7 +5,7 @@ const addTask = (task) => {
   const loadTasks = () => {
     const savedTasks = localStorage.getItem('tasks');
     if (savedTasks) {
-      tasks = JSON.parse(savedTasks);
+      tasks = JSON.parse(savedTasks) as Task[];
     }
   };
   const removeTask = (taskId) => {
