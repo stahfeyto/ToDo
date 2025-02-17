@@ -1,7 +1,7 @@
 import React from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as BarTooltip, Legend as BarLegend, ResponsiveContainer as BarContainer } from "recharts";
-import { AreaChart, Area, XAxis as AreaXAxis, YAxis as AreaYAxis, CartesianGrid as AreaGrid, Tooltip as AreaTooltip, ResponsiveContainer as AreaContainer } from "recharts";
+import { AreaChart, Area, XAxis as AreaXAxis, YAxis as AreaYAxis, CartesianGrid as AreaGrid, Tooltip as AreaTooltip, ResponsiveContainer as AreaContainer, LabelList } from "recharts";
 
 // Dados para o Gráfico Circular (Tarefas)
 const taskData = [
@@ -76,7 +76,7 @@ const DashboardCharts: React.FC = () => {
   return (
     <div className="flex flex-col gap-6 items-center justify-center mt-12">
       {/* Linha superior: Gráfico Circular e Gráfico de Barras */}
-      <div className="grid grid-cols-2 gap-6 w-full max-w-5xl">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-5xl">
         {/* Gráfico Circular */}
         <div className="bg-black rounded-lg p-4 flex flex-col justify-center items-center">
           <ResponsiveContainer width="100%" height={300}>
@@ -104,10 +104,11 @@ const DashboardCharts: React.FC = () => {
                 iconType="circle"
                 wrapperStyle={{
                   color: "white",
-                  fontSize: "14px",
+                  fontSize: "12px", // Diminui o tamanho da fonte na legenda
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "center",
+                  flexWrap: "wrap", // Quebra de linha nas legendas
                 }}
               />
             </PieChart>
@@ -131,10 +132,11 @@ const DashboardCharts: React.FC = () => {
               <BarLegend
                 wrapperStyle={{
                   color: "white",
-                  fontSize: "14px",
+                  fontSize: "12px", // Diminui o tamanho da fonte na legenda
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "center",
+                  flexWrap: "wrap", // Quebra de linha nas legendas
                 }}
               />
             </BarChart>
@@ -149,7 +151,15 @@ const DashboardCharts: React.FC = () => {
             <AreaGrid strokeDasharray="3 3" stroke="#444" />
             <Area type="monotone" dataKey="im" stroke="#8884d8" fill="#8884d8" />
             <Area type="monotone" dataKey="co" stroke="#ffffff" fill="#f4faff" />
-            <AreaXAxis dataKey="name" stroke="#fff" />
+            <AreaXAxis
+              dataKey="name"
+              stroke="#fff"
+              tick={{ fontSize: 12 }} // Reduz o tamanho da fonte dos rótulos
+              tickLine={false} // Remove a linha dos ticks para ganhar mais espaço
+              interval={0} // Mostra todos os ticks
+              angle={-45} // Gira os rótulos para que eles ocupem menos espaço
+              textAnchor="end" // Alinha o texto do rótulo para o fim
+            />
             <AreaYAxis stroke="#fff" />
             <AreaTooltip content={<CustomAreaTooltip />} />
             <Legend
@@ -157,10 +167,12 @@ const DashboardCharts: React.FC = () => {
               align="center"
               wrapperStyle={{
                 color: "white",
-                fontSize: "14px",
+                fontSize: "12px", // Diminui o tamanho da fonte na legenda
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "center",
+                flexWrap: "wrap", // Quebra de linha nas legendas
+                overflow: "auto", // Permite que o conteúdo da legenda não seja cortado
               }}
             />
           </AreaChart>
