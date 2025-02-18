@@ -92,10 +92,20 @@ const ModalCreateTask: React.FC<{
 
   const addNewTaskHandler = (event: React.FormEvent): void => {
     event.preventDefault();
-
+  
+    // Validação de título
     isTitleValid.current = title.trim().length > 0;
-    isDateValid.current = date.trim().length > 0;
-
+    
+    // Validação de data
+    const selectedDate = new Date(date);
+    const todayDateObj = new Date(todayDate);
+    isDateValid.current = selectedDate >= todayDateObj; // Verifica se a data selecionada é maior ou igual a hoje
+  
+    if (!isDateValid.current) {
+      alert("A data não pode ser no passado! Por favor, escolha uma data futura.");
+      return;
+    }
+  
     if (isTitleValid.current && isDateValid.current) {
       const newTask: Task = {
         title: title,
@@ -110,6 +120,7 @@ const ModalCreateTask: React.FC<{
       onClose();
     }
   };
+  
   return (
     <Modal onClose={onClose} title={nameForm}>
       <form
